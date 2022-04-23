@@ -1,6 +1,9 @@
 # diaporama_maker  
 Allows you to make diaporama from your videos  
 ## Setup  
+You will have to install all dependencies using requierments.txt    
+``pip install requierments.txt``
+
 Your repository of video have to look as :  
 |  
 ->Anime_name  
