@@ -1,5 +1,5 @@
 # diaporama_maker  
-Allows you to make diaporama from your videos  
+Allows you to make diaporama from your videos (Linux system only) 
 ## Setup  
 You will have to install all dependencies using requirements.txt    
 ``pip install requirements.txt``
