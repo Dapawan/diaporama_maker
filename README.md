@@ -8,9 +8,9 @@ Your repository of video have to look as :
 |  
 ->Anime_name  
 |  
------>Anime_seasons    
+----->S[number]    
 |  
---------->Anime_episodes  
+--------->ep[number].mp4  
 |  
 ->Other_anime_name  
 ....  
