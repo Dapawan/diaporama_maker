@@ -1,7 +1,7 @@
 # diaporama_maker  
 Allows you to make diaporama from your videos (Works better using Linux) 
 ## Setup  
-You will have to install all dependencies using requirements.txt and to use python 3.9 
+You will have to install all dependencies using requirements.txt and to use python 3.9   
 ``pip install -r requirements.txt``
 
 Your repository of video have to look as :  
