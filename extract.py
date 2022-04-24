@@ -18,7 +18,8 @@ import cv2
 
 
 # Convert time from seconds to minutes and seconds
-
+os_name = os.name
+isWindowsOS = (os_name == 'nt')
 
 def convert_time(time_sec):
     return (int(time_sec/60), time_sec % 60)
@@ -27,6 +28,9 @@ def convert_time(time_sec):
 
 
 def extractImages(pathIn, pathOut, video_start_time_seconds, time_between_frame, duration_time=-1, custom_name=""):
+    separator = "/"
+    if(isWindowsOS == True):
+        separator = "\\"
     count = 0
     vidcap = cv2.VideoCapture(pathIn)
 
@@ -86,14 +90,15 @@ def extractImages(pathIn, pathOut, video_start_time_seconds, time_between_frame,
         if(success == False):
             break
         if(custom_name == ""):
-            filename = pathOut + "/frame_" + \
+            filename = pathOut + separator + "frame_" + \
                 str(datetime.now().strftime("%d_%m_%Y_%H_%M_%S__%f")[:-3]) + \
                 str(count) + ".png"
         else:
-            filename = pathOut + "/" + \
+            filename = pathOut + separator + \
                 custom_name.replace(
-                    "/", "") + "__" + str(timedelta(seconds=count)).replace(":", "_") + ".png"  # remove /
+                    separator, "") + "__" + str(timedelta(seconds=count)).replace(":", "_") + ".png"  # remove /
 
+        print(f"Filename : {filename}")
         if(os.path.exists(filename)):
 
             # if (cv2.haveImageReader(filename)):
@@ -114,9 +119,15 @@ def extractImages(pathIn, pathOut, video_start_time_seconds, time_between_frame,
 
 
 def chooseRandomEp(base_path="/mnt/my_mount_dir/Anim/", exept=[]):
-    anim_dir_list = glob(base_path+"*/")  # list all dir only
+    all_file_suffix = "*/"
+    if(isWindowsOS):
+        all_file_suffix = "\*"
+
+    anim_dir_list = glob(base_path+all_file_suffix)  # list all dir only
     # print("anim_dir_list : " + ' '.join(anim_dir_list))
     print(f"Anime name exeption : {exept}")
+    print(f"Anime name : {anim_dir_list}")
+    
     # Remove anime
     str_to_remove = []
     for anime in anim_dir_list:
@@ -131,16 +142,20 @@ def chooseRandomEp(base_path="/mnt/my_mount_dir/Anim/", exept=[]):
     # print("AFTER REMOVE anim_dir_list : " + ' '.join(anim_dir_list))
 
     anime_dir_choose = random.choice(anim_dir_list)  # pick a random anim
-    season_dir_list = glob(anime_dir_choose + "*/")
+    season_dir_list = glob(anime_dir_choose + all_file_suffix)
     while(season_dir_list is None or len(season_dir_list) == 0):
-        print("REDO ! it was : " + anime_dir_choose)
+        print("REDO ! it was : " + anime_dir_choose )
         anime_dir_choose = random.choice(anim_dir_list)  # pick a random anim
-        season_dir_list = glob(anime_dir_choose + "*/")
+        season_dir_list = glob(anime_dir_choose + all_file_suffix)
 
     season_dir_choose = random.choice(season_dir_list)
+    print(f"season_dir_choose  : {season_dir_choose}")
+    if isWindowsOS :
+        season_dir_choose = season_dir_choose + "\\"
     ep_list = glob(season_dir_choose + "ep*.mp4")
+    print(f"ep_list  : {ep_list}")
     ep_choose = random.choice(ep_list)
-    print("Ep choosen : " + ep_choose)
+    print("Ep choosen : " + ep_choose )
     anim_name = anime_dir_choose.split(base_path)[1]
     season = season_dir_choose.split(anime_dir_choose)[1]
     ep = ep_choose.split(season_dir_choose)[1]
@@ -172,7 +187,7 @@ def extractDiaporama():
     a.add_argument("--pathIn", help="path to your videos",
                    required=True, type=str)
     a.add_argument(
-        "--exept", help="anime exception name => format tuple \"anime_example\"", nargs='+', type=str)
+        "--exept", help="anime exception name => format tuple \"anime_example\"", nargs='+', type=str,default=[])
 
     a.add_argument("--startTimeParam",
                    help="Tuple : MIN_start_time_minutes MAX_start_time_minutes STEP_start_time_secs", nargs=3, type=int, default=(0, 20*60, 1))
